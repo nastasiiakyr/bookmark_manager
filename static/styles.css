@@ -1,0 +1,71 @@
+/* Global App Styles */
+
+body {
+  font-family: "Montserrat", sans-serif;
+  background-color: #f8faf9;
+}
+
+/* Forms */
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.form-control {
+  border-radius: 10px;
+  padding: 12px;
+  font-size: 14px;
+}
+
+.btn-primary {
+  border-radius: 10px;
+  padding: 12px;
+  font-weight: 500;
+}
+
+/* Typography */
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+}
+
+/* Navbar */
+
+.navbar-brand {
+  color: #002312;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Alert */
+
+.alert {
+  border-radius: 0;
+  font-size: 14px;
+}
+
+/* Footer */
+
+footer {
+  border-top: 1px solid #c4c4c4;
+  padding: 20px 0;
+  text-align: center;
+  font-size: 14px;
+
+  width: 100%;
+}
+
+footer p {
+  margin: 0;
+  color: #575757;
+}
+
+footer a {
+  text-decoration: none;
+  color: #002312;
+}

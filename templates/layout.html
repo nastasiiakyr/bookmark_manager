@@ -23,15 +23,29 @@
       href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' style='font-size: 48px;'>📕</text></svg>"
     />
 
+    <!-- Styles -->
+    <link href="/static/styles.css" rel="stylesheet" />
+
     <title>Bookmark Manager: {% block title %}{% endblock %}</title>
   </head>
 
   <body>
-    <nav class="navbar navbar-dark bg-dark px-3">
-      <a class="navbar-brand" href="/">Bookmark Manager</a>
+    <nav class="navbar navbar-expand-md navbar-light bg-light px-3">
+      <a class="navbar-brand" href="/">📚 Bookmark Manager</a>
+      <button
+        aria-controls="navbar"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+        class="navbar-toggler"
+        data-bs-target="#navbar"
+        data-bs-toggle="collapse"
+        type="button"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
       <div class="collapse navbar-collapse" id="navbar">
         {% if session["user_id"] %}
-        <ul class="navbar-nav ms-auto mt-2">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link" href="/password">Change Password</a>
           </li>
@@ -40,23 +54,36 @@
           </li>
         </ul>
         {% else %}
-        <ul class="navbar-nav ms-auto mt-2">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link" href="/register">Register</a>
           </li>
-          <li class="nav-item"><a class="nav-link" href="/login">Log In</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/login">Log In</a>
+          </li>
         </ul>
         {% endif %}
       </div>
     </nav>
 
+    {% if get_flashed_messages() %}
+    <header>
+      <div class="alert alert-primary mb-0 text-center" role="alert">
+        {{ get_flashed_messages() | join(" ") }}
+      </div>
+    </header>
+    {% endif %}
+
     <main class="container py-5 text-center">
       {% block main %}{% endblock %}
     </main>
 
-    <footer class="mb-5">
-      Designed and developed by
-      <a href="https://kyrkilan.com/" target="_blank">Anastasiia Kyrkilan</a> ©
+    <footer>
+      <p>
+        Designed and developed by
+        <a href="https://kyrkilan.com/" target="_blank">Anastasiia Kyrkilan</a>
+        ©
+      </p>
     </footer>
   </body>
 </html>
