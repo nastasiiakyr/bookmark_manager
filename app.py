@@ -22,10 +22,48 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
+# Main route
 @app.route("/")
 def home():
     return render_template("index.html")
+
+
+# Authorization routes
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log in user"""
+
+     # Forget any user_id
+    session.clear()
+
+    # Handle form submission
+    if request.method == "POST":
+
+        # Get form data
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        # Validate form data
+        if not username or not password:
+            flash("All fields are required")
+            return redirect("/login")
+
+        # Query database for user
+        rows = db.execute("SELECT * FROM users WHERE username = ?", username)
+
+        # Check if user exists and password is correct
+        if len(rows) != 1 or not check_password_hash(rows[0]["password_hash"], password):
+            flash("Invalid username and/or password")
+            return redirect("/login")
+
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+
+        return redirect("/")
+
+    else:
+        return render_template("login.html")
+    
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
