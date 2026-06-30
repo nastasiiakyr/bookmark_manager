@@ -3,6 +3,8 @@ from flask import Flask, flash, redirect, render_template, request, session
 from flask_session import Session  
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from helpers import login_required
+
 app = Flask(__name__)
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -26,6 +28,7 @@ def after_request(response):
 #####
 ##### Main route
 @app.route("/")
+@login_required
 def home():
     return render_template("index.html")
 
