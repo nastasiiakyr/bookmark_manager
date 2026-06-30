@@ -39,11 +39,11 @@ def home():
 def login():
     """Log in user"""
 
-     # Forget any user_id
-    session.clear()
-
     # Handle form submission
     if request.method == "POST":
+
+        # Forget any user_id
+        session.clear()
 
         # Get form data
         username = request.form.get("username")
