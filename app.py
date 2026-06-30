@@ -22,13 +22,16 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-# Main route
+
+#####
+##### Main route
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-# Authorization routes
+#####
+##### Authorization routes
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log in user"""
@@ -63,6 +66,16 @@ def login():
 
     else:
         return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    """Log out user"""
+
+     # Forget any user_id
+    session.clear()
+
+    return redirect("/")
     
 
 @app.route("/register", methods=["GET", "POST"])
