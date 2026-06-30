@@ -79,6 +79,52 @@ def logout():
     session.clear()
 
     return redirect("/")
+
+
+@app.route("/password", methods=["GET", "POST"])
+@login_required
+def password():
+    """Change user's password"""
+    if request.method == "POST":
+        # Get data
+        old_password = request.form.get("old_password")
+        new_password = request.form.get("new_password")
+        new_confirmation = request.form.get("new_confirmation")
+
+        # Query database for username
+        user = db.execute(
+            "SELECT * FROM users WHERE id = ?", session["user_id"]
+        )
+
+        # Ensure old password was submitted
+        if not old_password or not check_password_hash(
+            user[0]["password_hash"], old_password
+        ):
+            flash("Provide current password")
+            return redirect("/password")
+
+        # Ensure new password was submitted
+        elif not new_password:
+            flash("Provide new password")
+            return redirect("/password")
+
+        elif new_password != new_confirmation:
+            flash("New passwords do not match")
+            return redirect("/password")
+
+        elif old_password == new_password:
+            flash("New password must be different from current password")
+            return redirect("/password")
+
+        # Save new data to the database
+        db.execute("UPDATE users SET password_hash = ? WHERE id = ?",
+                   generate_password_hash(new_password, method='scrypt', salt_length=16), session["user_id"])
+
+        return redirect("/logout")
+
+    else:
+        # Show form to change password
+        return render_template("password.html")
     
 
 @app.route("/register", methods=["GET", "POST"])
