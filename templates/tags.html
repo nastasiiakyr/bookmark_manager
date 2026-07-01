@@ -1,0 +1,54 @@
+{% extends "layout.html" %} {% block title %} Tag settings {% endblock %} {%
+block main %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h2 class="mb-0">Tags</h2>
+
+  <a href="/create-tag" class="btn btn-primary"> + Create tag </a>
+</div>
+
+<table class="table table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Color</th>
+
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% if not tags %}
+    <tr>
+      <td colspan="4" class="text-center">No tags found</td>
+    </tr>
+
+    {% else %} {% for tag in tags %}
+
+    <tr>
+      <td>●</td>
+
+      <td>{{ tag.name }}</td>
+
+      <td class="text-end text-nowrap">
+        <div class="d-inline-flex gap-2">
+          <a href="/" class="btn btn-sm btn-outline-secondary"> Edit </a>
+
+          <form method="post" action="/delete-tag" class="m-0">
+            <input type="hidden" name="id" value="{{ tag.id }}" />
+
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Delete
+            </button>
+          </form>
+        </div>
+      </td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+  {% endif %}
+</table>
+
+{% endblock %}

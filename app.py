@@ -165,6 +165,16 @@ def register():
         return render_template("register.html")
 
 
+####
+#### Tag routes
+@app.route("/tags", methods=["GET"])
+@login_required
+def tags():
+    """Show all tags for the logged-in user"""
+    user_id = session["user_id"]
+    tags = db.execute("SELECT id, name, color FROM tags WHERE user_id = ? ORDER BY name", user_id)
+    return render_template("tags.html", tags=tags)
+
 
 if __name__ == "__main__":
     app.run(debug=True)
