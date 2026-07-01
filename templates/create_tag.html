@@ -1,0 +1,32 @@
+{% extends "layout.html" %} {% block title %} Create Tag {% endblock %} {% block
+main %}
+
+<h1 class="mb-4">Create tag</h1>
+
+<form action="/create-tag" method="post">
+  <div class="mb-2 col-3">
+    <input
+      autocomplete="off"
+      autofocus
+      class="input form-control mx-auto"
+      name="name"
+      placeholder="Tag Name"
+      type="text"
+    />
+  </div>
+
+  <div class="mb-3 col-3">
+    <select class="input form-select mx-auto" name="color">
+      <option value="" disabled selected>Select color</option>
+      <option value="blue">Blue</option>
+      <option value="green">Green</option>
+      <option value="red">Red</option>
+      <option value="purple">Purple</option>
+      <option value="gray">Gray</option>
+    </select>
+  </div>
+
+  <button class="btn btn-primary col-3" type="submit">Create Tag</button>
+</form>
+
+{% endblock %}

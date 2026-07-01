@@ -171,10 +171,31 @@ def register():
 @login_required
 def tags():
     """Show all tags for the logged-in user"""
-    user_id = session["user_id"]
-    tags = db.execute("SELECT id, name, color FROM tags WHERE user_id = ? ORDER BY name", user_id)
+    tags = db.execute("SELECT id, name, color FROM tags WHERE user_id = ? ORDER BY name", session["user_id"])
     return render_template("tags.html", tags=tags)
 
+
+@app.route("/create-tag", methods=["GET", "POST"])
+@login_required
+def create_tag():
+    """Create a new tag"""
+    if request.method == "POST":
+        # Get form data
+        name = request.form.get("name")
+        color = request.form.get("color")
+
+        # Validate form data
+        if not name or not color:
+            flash("All fields are required")
+            return redirect("/create-tag")
+
+        # Save data to the database
+        db.execute("INSERT INTO tags (user_id, name, color) VALUES(?, ?, ?)", session["user_id"], name, color)
+
+        return redirect("/tags")
+
+    else:
+        return render_template("create_tag.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
