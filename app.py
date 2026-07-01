@@ -249,5 +249,20 @@ def edit_tag():
 
         return render_template("edit_tag.html", tag=tag[0], colors=COLORS)
 
+
+@app.route("/delete-tag", methods=["POST"])
+@login_required
+def delete_tag():
+    """Delete a tag"""
+    tag_id = request.form.get("id")
+
+    if not tag_id:
+        flash("Something went wrong")
+        return redirect("/tags")
+
+    db.execute("DELETE FROM tags WHERE id = ? AND user_id = ?", tag_id, session["user_id"])
+
+    return redirect("/tags")
+
 if __name__ == "__main__":
     app.run(debug=True)
