@@ -1,5 +1,5 @@
-{% extends "layout.html" %} {% block title %} Tag settings {% endblock %} {%
-block main %}
+{% extends "layout.html" %} {% block title %}Tag settings{% endblock %} {% block
+main %}
 
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="mb-0">Tags</h1>
@@ -27,7 +27,12 @@ block main %}
     {% else %} {% for tag in tags %}
 
     <tr>
-      <td>●</td>
+      <td>
+        <span
+          class="tag-circle"
+          style="background-color: {{ colors[tag.color] }};"
+        ></span>
+      </td>
 
       <td>{{ tag.name }}</td>
 

@@ -69,3 +69,11 @@ footer a {
   text-decoration: none;
   color: #002312;
 }
+
+/* Tags Colors */
+.tag-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+}

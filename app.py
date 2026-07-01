@@ -16,6 +16,15 @@ Session(app)
 # Configure CS50 Library to use SQLite database
 db = SQL("sqlite:///bookmark_manager.db")
 
+# Define a dictionary of colors for tags
+COLORS = {
+    "blue": "#3b82f6",
+    "green": "#22c55e",
+    "red": "#ef4444",
+    "purple": "#a855f7",
+    "gray": "#6b7280"
+}
+
 @app.after_request
 def after_request(response):
     """Ensure responses aren't cached"""
@@ -172,7 +181,7 @@ def register():
 def tags():
     """Show all tags for the logged-in user"""
     tags = db.execute("SELECT id, name, color FROM tags WHERE user_id = ? ORDER BY name", session["user_id"])
-    return render_template("tags.html", tags=tags)
+    return render_template("tags.html", tags=tags, colors=COLORS)
 
 
 @app.route("/create-tag", methods=["GET", "POST"])
@@ -187,6 +196,11 @@ def create_tag():
         # Validate form data
         if not name or not color:
             flash("All fields are required")
+            return redirect("/create-tag")
+        
+        # Validate color selection
+        if color not in COLORS:
+            flash("Invalid color selected")
             return redirect("/create-tag")
 
         # Save data to the database
