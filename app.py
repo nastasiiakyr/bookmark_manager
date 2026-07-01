@@ -209,7 +209,45 @@ def create_tag():
         return redirect("/tags")
 
     else:
-        return render_template("create_tag.html")
+        return render_template("create_tag.html", colors=COLORS)
+
+
+@app.route("/edit-tag", methods=["GET", "POST"])
+@login_required
+def edit_tag():
+    """Edit an existing tag"""
+    if request.method == "POST":
+
+        tag_id = request.form.get("id")
+        name = request.form.get("name")
+        color = request.form.get("color")
+
+        if not tag_id:
+            flash("Something went wrong")
+            return redirect("/tags")
+
+        if not name or not color:
+            flash("All fields are required")
+            return redirect(f"/edit-tag?id={tag_id}")
+
+        if color not in COLORS:
+            flash("Invalid color")
+            return redirect(f"/edit-tag?id={tag_id}")
+
+        db.execute("UPDATE tags SET name = ?, color = ? WHERE id = ? AND user_id = ?", name, color, tag_id, session["user_id"])
+
+        return redirect("/tags")
+
+    else:
+        tag_id = request.args.get("id")
+
+        tag = db.execute("SELECT id, name, color FROM tags WHERE id = ? AND user_id = ?", tag_id, session["user_id"])
+
+        if not tag:
+            flash("Tag not found")
+            return redirect("/tags")
+
+        return render_template("edit_tag.html", tag=tag[0], colors=COLORS)
 
 if __name__ == "__main__":
     app.run(debug=True)

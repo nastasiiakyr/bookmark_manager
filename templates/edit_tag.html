@@ -1,0 +1,40 @@
+{% extends "layout.html" %} {% block title %} Edit Tag {% endblock %} 
+
+{% block main %}
+
+<h1 class="mb-4">Edit tag {{ tag.name }}</h1>
+
+<form action="/edit-tag" method="post">
+  <input type="hidden" name="id" value="{{ tag.id }}" />
+
+  <div class="mb-2 col-3">
+    <input
+      autocomplete="off"
+      autofocus
+      class="input form-control mx-auto"
+      name="name"
+      placeholder="New Tag Name"
+      value="{{ tag.name }}"
+      type="text"
+      maxlength="50"
+    />
+  </div>
+
+  <div class="mb-3 col-3">
+    <select class="input form-select mx-auto" name="color">
+      <!-- <option value="" disabled selected>Select new color</option> -->
+      {% for color in colors %}
+      <option
+        value="{{ color }}"
+        {% if color==tag.color %} selected {% endif%}
+      >
+        {{ color }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <button class="btn btn-primary col-3" type="submit">Save changes</button>
+</form>
+
+{% endblock %}

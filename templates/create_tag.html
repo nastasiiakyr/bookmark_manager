@@ -12,17 +12,18 @@ main %}
       name="name"
       placeholder="Tag Name"
       type="text"
+      maxlength="50"
     />
   </div>
 
   <div class="mb-3 col-3">
     <select class="input form-select mx-auto" name="color">
       <option value="" disabled selected>Select color</option>
-      <option value="blue">Blue</option>
-      <option value="green">Green</option>
-      <option value="red">Red</option>
-      <option value="purple">Purple</option>
-      <option value="gray">Gray</option>
+      {% for color in colors %}
+
+      <option value="{{ color }}">{{ color }}</option>
+
+      {% endfor %}
     </select>
   </div>
 
