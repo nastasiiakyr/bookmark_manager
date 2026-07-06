@@ -5,6 +5,11 @@ body {
   background-color: #f8faf9;
 }
 
+a {
+  text-decoration: none;
+  color: #002312;
+}
+
 /* Forms */
 
 form {
@@ -65,15 +70,17 @@ footer p {
   color: #575757;
 }
 
-footer a {
-  text-decoration: none;
-  color: #002312;
-}
-
 /* Tags Colors */
 .tag-circle {
   width: 16px;
   height: 16px;
   border-radius: 50%;
   display: inline-block;
+}
+
+/* Bookmarks */
+.bookmark-tag {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #fff;
 }

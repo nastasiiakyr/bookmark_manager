@@ -1,0 +1,95 @@
+{% extends "layout.html" %} {% block title %}Bookmarks{% endblock %} {% block
+main %}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="mb-0">Bookmarks</h1>
+
+  <a href="/create-bookmark" class="btn btn-primary"> + Add bookmark </a>
+</div>
+
+<table class="table table-hover align-middle">
+  <thead>
+    <tr>
+      <th>Bookmark</th>
+
+      <th class="text-start">Tag</th>
+
+      <th class="text-start">Cost</th>
+
+      <th class="text-start">Description</th>
+
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% if not bookmarks %}
+    <tr>
+      <td colspan="5" class="text-center">No bookmarks found</td>
+    </tr>
+
+    {% else %} {% for bookmark in bookmarks %}
+
+    <tr>
+      <td class="text-start">
+        {% if bookmark.favicon %}
+        <img
+          src="{{ bookmark.favicon }}"
+          class="me-2"
+          width="16"
+          height="16"
+          alt=""
+        />
+        {% else %} 📚 {% endif %}
+        <a href="{{ bookmark.url }}" target="_blank" rel="noopener noreferrer"
+          >{{ bookmark.name }}</a
+        >
+      </td>
+
+      <td class="text-start">
+        {% for tag in bookmark.tags %}
+        <div
+          class="bookmark-tag"
+          style="background-color: {{ colors[tag.color] }};"
+        >
+          {{ tag.name }}
+        </div>
+        {% endfor %}
+      </td>
+
+      <td class="text-start">
+        {% if bookmark.cost %} {{ costs[bookmark.cost] }} {% else %} - {% endif
+        %}
+      </td>
+
+      <td class="text-start">
+        {% if bookmark.description %} {{ bookmark.description }} {% else %} - {%
+        endif %}
+      </td>
+
+      <td class="text-end text-nowrap">
+        <div class="d-inline-flex gap-2">
+          <a
+            href="/edit-bookmark?id={{ bookmark.id }}"
+            class="btn btn-sm btn-outline-secondary"
+          >
+            Edit
+          </a>
+
+          <form method="post" action="/delete-bookmark" class="m-0">
+            <input type="hidden" name="id" value="{{ bookmark.id }}" />
+
+            <button type="submit" class="btn btn-sm btn-outline-danger">
+              Delete
+            </button>
+          </form>
+        </div>
+      </td>
+    </tr>
+
+    {% endfor %}
+  </tbody>
+  {% endif %}
+</table>
+
+{% endblock %}
