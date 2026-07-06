@@ -43,10 +43,26 @@ def after_request(response):
 
 #####
 ##### Main route
-@app.route("/")
+@app.route("/", methods=["GET"])
 @login_required
 def home():
-    return render_template("index.html")
+    """Show all bookmarks for the logged-in user"""
+    # Get bookmarks from the database
+    bookmarks = db.execute("SELECT id, name, url, favicon, cost, description FROM bookmarks WHERE user_id = ? ORDER BY name", session["user_id"])
+
+    # Get tags associated with bookmarks
+    bookmark_tags = db.execute("SELECT bt.bookmark_id, t.id, t.name, t.color FROM bookmark_tags AS bt JOIN tags AS t ON bt.tag_id = t.id WHERE t.user_id = ?", session["user_id"])
+
+    # Add tags to bookmarks
+    for bookmark in bookmarks:
+        bookmark["tags"] = []
+
+    for bookmark in bookmarks:
+        for tag in bookmark_tags:
+            if bookmark["id"] == tag["bookmark_id"]:
+                bookmark["tags"].append(tag)
+    
+    return render_template("index.html", bookmarks=bookmarks, costs=COSTS, colors=COLORS)
 
 
 #####
@@ -181,32 +197,14 @@ def register():
         return render_template("register.html")
 
 
-####
-#### Bookmark routes
-@app.route("/bookmarks", methods=["GET"])
-@login_required
-def bookmarks():
-    """Show all bookmarks for the logged-in user"""
-    # Get bookmarks from the database
-    bookmarks = db.execute("SELECT id, name, url, favicon, cost, description FROM bookmarks WHERE user_id = ? ORDER BY name", session["user_id"])
+#####
+##### Bookmark routes
 
-    # Get tags associated with bookmarks
-    bookmark_tags = db.execute("SELECT bt.bookmark_id, t.id, t.name, t.color FROM bookmark_tags AS bt JOIN tags AS t ON bt.tag_id = t.id WHERE t.user_id = ?", session["user_id"])
-
-    # Add tags to bookmarks
-    for bookmark in bookmarks:
-        bookmark["tags"] = []
-
-    for bookmark in bookmarks:
-        for tag in bookmark_tags:
-            if bookmark["id"] == tag["bookmark_id"]:
-                bookmark["tags"].append(tag)
-    
-    return render_template("bookmarks.html", bookmarks=bookmarks, costs=COSTS, colors=COLORS)
+   
 
 
-####
-#### Tag routes
+#####
+##### Tag routes
 @app.route("/tags", methods=["GET"])
 @login_required
 def tags():
