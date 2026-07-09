@@ -1,0 +1,75 @@
+{% extends "layout.html" %} {% block title %} Add Bookmark {% endblock %} {%
+block main %}
+
+<h1 class="mb-4">Add bookmark</h1>
+
+<form action="/create-bookmark" method="post">
+  <div class="mb-2 col-3">
+    <input
+      autocomplete="off"
+      autofocus
+      class="input form-control mx-auto"
+      name="name"
+      placeholder="Bookmark Name"
+      type="text"
+      maxlength="50"
+    />
+  </div>
+
+  <div class="mb-2 col-3">
+    <input
+      autocomplete="off"
+      class="input form-control mx-auto"
+      name="url"
+      placeholder="Bookmark URl"
+      type="text"
+    />
+  </div>
+
+  <div class="mb-3 col-3">
+    <select class="input form-select mx-auto" name="tags" multiple>
+      <option value="" disabled selected>Select tags</option>
+      {% for tag in tags %}
+
+      <option value="{{ tag.id }}">{{ tag.name }}</option>
+
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3 col-3">
+    <select class="input form-select mx-auto" name="cost">
+      <option value="" disabled selected>Select cost type</option>
+      {% for cost in costs %}
+
+      <option value="{{ cost }}">{{ cost }}</option>
+
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-2 col-3">
+    <input
+      autocomplete="off"
+      class="input form-control mx-auto"
+      name="description"
+      placeholder="Description (optional)"
+      type="text"
+      maxlength="200"
+    />
+  </div>
+
+  <div class="mb-2 col-3">
+    <input
+      autocomplete="off"
+      class="input form-control mx-auto"
+      name="favicon"
+      placeholder="Favicon URL (optional)"
+      type="text"
+    />
+  </div>
+
+  <button class="btn btn-primary col-3" type="submit">Add Bookmark</button>
+</form>
+
+{% endblock %}

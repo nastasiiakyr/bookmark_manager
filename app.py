@@ -199,7 +199,59 @@ def register():
 
 #####
 ##### Bookmark routes
+@app.route("/create-bookmark", methods=["GET", "POST"])
+@login_required
+def create_bookmark():
+    """Create a new bookmark"""
+    # Get user's tags from the database
+    user_tags = db.execute("SELECT id, name FROM tags WHERE user_id = ?", session["user_id"])
 
+    # Handle form submission
+    if request.method == "POST":
+        # Get form data
+        name = request.form.get("name")
+        url = request.form.get("url")
+        favicon = request.form.get("favicon")
+        tags = request.form.getlist("tags")
+        cost = request.form.get("cost")
+        description = request.form.get("description")
+
+        # Validate form data
+        if not name or not url or not tags:
+            flash("Bookmark name, URL and tags are required")
+            return redirect("/create-bookmark")
+        
+        # Validate url format
+        if not url.startswith("http://") and not url.startswith("https://"):
+            flash("Invalid URL format")
+            return redirect("/create-bookmark")
+        
+        # Validate favicon url format if provided
+        if favicon and not (favicon.startswith("http://") or favicon.startswith("https://")):
+            flash("Invalid favicon URL format")
+            return redirect("/create-bookmark")
+        
+        # Validate tags selection
+        for tag in tags:
+            if not any(t["id"] == int(tag) for t in user_tags):
+                flash("Invalid tag selected")
+                return redirect("/create-bookmark")
+            
+        # Validate cost selection
+        if cost and cost not in COSTS:
+            flash("Invalid cost type selected")
+            return redirect("/create-bookmark")    
+
+        # Save data to the database
+        bookmark_id =db.execute("INSERT INTO bookmarks (user_id, name, url, favicon, cost, description) VALUES(?, ?, ?, ?, ?, ?)", session["user_id"], name, url, favicon, cost, description)
+
+        for tag in tags:
+            db.execute("INSERT INTO bookmark_tags (bookmark_id, tag_id) VALUES(?, ?)", bookmark_id, tag)
+
+        return redirect("/")
+
+    else:
+        return render_template("create_bookmark.html", tags=user_tags, costs=COSTS)
    
 
 
