@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% block title %} Edit Bookmark {% endblock %} {%
 block main %}
 
-<h1 class="mb-4">Edit bookmark</h1>
+<h1 class="mb-4 text-center">Edit bookmark</h1>
 
 <form action="/edit-bookmark" method="post">
   <input type="hidden" name="id" value="{{ bookmark.id }}" />
@@ -31,21 +31,52 @@ block main %}
   </div>
 
   <div class="mb-2 col-3">
-    <select class="input form-select mx-auto" name="tags" multiple>
-      <option value="" disabled>Select tags</option>
-      {% for tag in tags %}
+    <label class="form-label">Select Tags</label>
 
-      <option value="{{ tag.id }}" {% if tag.id in bookmark_tags %} selected {% endif%}> {{ tag.name }} </option>
-      {% endfor %}
-    </select>
+    {% for tag in tags %}
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="tags"
+        value="{{ tag.id }}"
+        id="tag{{ tag.id }}"
+        {%
+        if
+        tag.id
+        in
+        bookmark_tags
+        %}checked{%
+        endif
+        %}
+      />
+
+      <label class="form-check-label text-left" for="tag{{ tag.id }}">
+        {{ tag.name }}
+      </label>
+    </div>
+    {% endfor %}
   </div>
 
   <div class="mb-2 col-3">
     <select class="input form-select mx-auto" name="cost">
-      <option value="" disabled {% if not bookmark.cost %} selected {% endif%}>Select cost type</option>
+      <option value="" disabled {% if not bookmark.cost %} selected {% endif%}>
+        Select cost type
+      </option>
       {% for cost in costs %}
 
-      <option value="{{ cost }}" {% if cost==bookmark.cost %} selected {% endif%}>{{ cost }}</option>
+      <option
+        value="{{ cost }}"
+        {%
+        if
+        cost=="bookmark.cost"
+        %}
+        selected
+        {%
+        endif%}
+      >
+        {{ cost }}
+      </option>
 
       {% endfor %}
     </select>

@@ -327,7 +327,25 @@ def edit_bookmark():
             return redirect("/")
 
         return render_template("edit_bookmark.html", bookmark=bookmark[0], tags=user_tags, bookmark_tags=bookmark_tags, costs=COSTS)
+    
 
+@app.route("/delete-bookmark", methods=["POST"])
+@login_required
+def delete_bookmark():
+    """Delete a bookmark"""
+    bookmark_id = request.form.get("id")
+
+    if not bookmark_id:
+        flash("Something went wrong")
+        return redirect("/")
+    
+    # Remove existing tags for the bookmark
+    db.execute("DELETE FROM bookmark_tags WHERE bookmark_id = ?", bookmark_id)
+
+    # Delete the bookmark from the database
+    db.execute("DELETE FROM bookmarks WHERE id = ? AND user_id = ?", bookmark_id, session["user_id"])
+
+    return redirect("/")
 
 
 #####
@@ -424,6 +442,7 @@ def delete_tag():
     db.execute("DELETE FROM tags WHERE id = ? AND user_id = ?", tag_id, session["user_id"])
 
     return redirect("/tags")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

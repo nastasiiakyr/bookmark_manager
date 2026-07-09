@@ -1,7 +1,7 @@
 {% extends "layout.html" %} {% block title %} Add Bookmark {% endblock %} {%
 block main %}
 
-<h1 class="mb-4">Add bookmark</h1>
+<h1 class="mb-4 text-center">Add bookmark</h1>
 
 <form action="/create-bookmark" method="post">
   <div class="mb-2 col-3">
@@ -27,14 +27,23 @@ block main %}
   </div>
 
   <div class="mb-2 col-3">
-    <select class="input form-select mx-auto" name="tags" multiple>
-      <option value="" disabled selected>Select tags</option>
-      {% for tag in tags %}
+    <label class="form-label">Select Tags</label>
 
-      <option value="{{ tag.id }}">{{ tag.name }}</option>
+    {% for tag in tags %}
+    <div class="form-check">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        name="tags"
+        value="{{ tag.id }}"
+        id="tag{{ tag.id }}"
+      />
 
-      {% endfor %}
-    </select>
+      <label class="form-check-label text-left" for="tag{{ tag.id }}">
+        {{ tag.name }}
+      </label>
+    </div>
+    {% endfor %}
   </div>
 
   <div class="mb-2 col-3">

@@ -2,7 +2,7 @@
 
 {% block main %}
 
-<h1 class="mb-4">Edit tag {{ tag.name }}</h1>
+<h1 class="mb-4 text-center">Edit tag {{ tag.name }}</h1>
 
 <form action="/edit-tag" method="post">
   <input type="hidden" name="id" value="{{ tag.id }}" />
