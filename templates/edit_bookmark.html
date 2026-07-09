@@ -1,16 +1,19 @@
-{% extends "layout.html" %} {% block title %} Add Bookmark {% endblock %} {%
+{% extends "layout.html" %} {% block title %} Edit Bookmark {% endblock %} {%
 block main %}
 
-<h1 class="mb-4">Add bookmark</h1>
+<h1 class="mb-4">Edit bookmark</h1>
 
-<form action="/create-bookmark" method="post">
+<form action="/edit-bookmark" method="post">
+  <input type="hidden" name="id" value="{{ bookmark.id }}" />
+
   <div class="mb-2 col-3">
     <input
       autocomplete="off"
       autofocus
       class="input form-control mx-auto"
       name="name"
-      placeholder="Bookmark Name"
+      placeholder="New Bookmark Name"
+      value="{{ bookmark.name }}"
       type="text"
       maxlength="50"
     />
@@ -21,28 +24,28 @@ block main %}
       autocomplete="off"
       class="input form-control mx-auto"
       name="url"
-      placeholder="Bookmark URl"
+      placeholder="New Bookmark URl"
+      value="{{ bookmark.url }}"
       type="text"
     />
   </div>
 
   <div class="mb-2 col-3">
     <select class="input form-select mx-auto" name="tags" multiple>
-      <option value="" disabled selected>Select tags</option>
+      <option value="" disabled>Select tags</option>
       {% for tag in tags %}
 
-      <option value="{{ tag.id }}">{{ tag.name }}</option>
-
+      <option value="{{ tag.id }}" {% if tag.id in bookmark_tags %} selected {% endif%}> {{ tag.name }} </option>
       {% endfor %}
     </select>
   </div>
 
   <div class="mb-2 col-3">
     <select class="input form-select mx-auto" name="cost">
-      <option value="" disabled selected>Select cost type</option>
+      <option value="" disabled {% if not bookmark.cost %} selected {% endif%}>Select cost type</option>
       {% for cost in costs %}
 
-      <option value="{{ cost }}">{{ cost }}</option>
+      <option value="{{ cost }}" {% if cost==bookmark.cost %} selected {% endif%}>{{ cost }}</option>
 
       {% endfor %}
     </select>
@@ -54,6 +57,7 @@ block main %}
       class="input form-control mx-auto"
       name="description"
       placeholder="Description (optional)"
+      value="{{ bookmark.description }}"
       type="text"
       maxlength="200"
     />
@@ -65,11 +69,12 @@ block main %}
       class="input form-control mx-auto"
       name="favicon"
       placeholder="Favicon URL (optional)"
+      value="{{ bookmark.favicon }}"
       type="text"
     />
   </div>
 
-  <button class="btn btn-primary col-3" type="submit">Add Bookmark</button>
+  <button class="btn btn-primary col-3" type="submit">Save changes</button>
 </form>
 
 {% endblock %}

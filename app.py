@@ -252,7 +252,82 @@ def create_bookmark():
 
     else:
         return render_template("create_bookmark.html", tags=user_tags, costs=COSTS)
-   
+
+
+@app.route("/edit-bookmark", methods=["GET", "POST"])
+@login_required
+def edit_bookmark():
+    """Edit an existing bookmark"""
+    # Get user's tags from the database
+    user_tags = db.execute("SELECT id, name FROM tags WHERE user_id = ?", session["user_id"])
+
+    # Handle form submission
+    if request.method == "POST":
+
+        bookmark_id = request.form.get("id")
+        name = request.form.get("name")
+        url = request.form.get("url")
+        favicon = request.form.get("favicon")
+        tags = request.form.getlist("tags")
+        cost = request.form.get("cost")
+        description = request.form.get("description")
+
+        if not bookmark_id:
+            flash("Something went wrong")
+            return redirect("/")
+        
+        # Validate form data
+        if not name or not url or not tags:
+            flash("Bookmark name, URL and tags are required")
+            return redirect(f"/edit-bookmark?id={bookmark_id}")
+        
+        # Validate url format
+        if not url.startswith("http://") and not url.startswith("https://"):
+            flash("Invalid URL format")
+            return redirect(f"/edit-bookmark?id={bookmark_id}")
+        
+        # Validate favicon url format if provided
+        if favicon and not (favicon.startswith("http://") or favicon.startswith("https://")):
+            flash("Invalid favicon URL format")
+            return redirect(f"/edit-bookmark?id={bookmark_id}")
+        
+        # Validate tags selection
+        for tag in tags:
+            if not any(t["id"] == int(tag) for t in user_tags):
+                flash("Invalid tag selected")
+                return redirect(f"/edit-bookmark?id={bookmark_id}")
+            
+        # Validate cost selection
+        if cost and cost not in COSTS:
+            flash("Invalid cost type selected")
+            return redirect(f"/edit-bookmark?id={bookmark_id}")
+
+        # Update data in the database
+        db.execute("UPDATE bookmarks SET name = ?, url = ?, favicon = ?, cost = ?, description = ? WHERE id = ? AND user_id = ?", name, url, favicon, cost, description, bookmark_id, session["user_id"])
+
+        # Remove existing tags for the bookmark
+        db.execute("DELETE FROM bookmark_tags WHERE bookmark_id = ?", bookmark_id)
+        
+        # Add new tags for the bookmark
+        for tag in tags:
+            db.execute("INSERT INTO bookmark_tags (bookmark_id, tag_id) VALUES(?, ?)", bookmark_id, tag)
+
+        return redirect("/")
+
+    else:
+        # Get bookmark ID from query parameters
+        bookmark_id = request.args.get("id")
+        
+        bookmark = db.execute("SELECT id, name, url, favicon, cost, description FROM bookmarks WHERE id = ? AND user_id = ?", bookmark_id, session["user_id"])
+        bookmark_tags = db.execute("SELECT tag_id FROM bookmark_tags WHERE bookmark_id = ?", bookmark_id)
+        bookmark_tags = [tag["tag_id"] for tag in bookmark_tags]
+
+        if not bookmark:
+            flash("Bookmark not found")
+            return redirect("/")
+
+        return render_template("edit_bookmark.html", bookmark=bookmark[0], tags=user_tags, bookmark_tags=bookmark_tags, costs=COSTS)
+
 
 
 #####
@@ -299,6 +374,7 @@ def edit_tag():
     """Edit an existing tag"""
     if request.method == "POST":
 
+        # Get form data
         tag_id = request.form.get("id")
         name = request.form.get("name")
         color = request.form.get("color")
@@ -307,6 +383,7 @@ def edit_tag():
             flash("Something went wrong")
             return redirect("/tags")
 
+        # Validate form data
         if not name or not color:
             flash("All fields are required")
             return redirect(f"/edit-tag?id={tag_id}")
@@ -315,13 +392,16 @@ def edit_tag():
             flash("Invalid color")
             return redirect(f"/edit-tag?id={tag_id}")
 
+        # Update data in the database
         db.execute("UPDATE tags SET name = ?, color = ? WHERE id = ? AND user_id = ?", name, color, tag_id, session["user_id"])
 
         return redirect("/tags")
 
     else:
+        # Get tag ID from query parameters
         tag_id = request.args.get("id")
 
+        # Query the database for the tag
         tag = db.execute("SELECT id, name, color FROM tags WHERE id = ? AND user_id = ?", tag_id, session["user_id"])
 
         if not tag:
