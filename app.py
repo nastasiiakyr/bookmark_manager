@@ -47,8 +47,17 @@ def after_request(response):
 @login_required
 def home():
     """Show all bookmarks for the logged-in user"""
+
+    # Get search query
+    search = request.args.get("search", "").strip()
+
     # Get bookmarks from the database
-    bookmarks = db.execute("SELECT id, name, url, favicon, cost, description FROM bookmarks WHERE user_id = ? ORDER BY name", session["user_id"])
+    if search:
+        query = "%" + search + "%"
+
+        bookmarks = db.execute("SELECT DISTINCT b.id, b.name, b.url, b.favicon, b.cost, b.description FROM bookmarks AS b LEFT JOIN bookmark_tags AS bt ON b.id = bt.bookmark_id LEFT JOIN tags AS t ON bt.tag_id = t.id WHERE b.user_id = ? AND (b.name LIKE ? OR b.url LIKE ? OR b.description LIKE ? OR b.cost LIKE ? OR t.name LIKE ?) ORDER BY b.name", session["user_id"], query, query, query, query, query)
+    else:
+        bookmarks = db.execute("SELECT id, name, url, favicon, cost, description FROM bookmarks WHERE user_id = ? ORDER BY name", session["user_id"])
 
     # Get tags associated with bookmarks
     bookmark_tags = db.execute("SELECT bt.bookmark_id, t.id, t.name, t.color FROM bookmark_tags AS bt JOIN tags AS t ON bt.tag_id = t.id WHERE t.user_id = ?", session["user_id"])
@@ -62,7 +71,7 @@ def home():
             if bookmark["id"] == tag["bookmark_id"]:
                 bookmark["tags"].append(tag)
     
-    return render_template("index.html", bookmarks=bookmarks, costs=COSTS, colors=COLORS)
+    return render_template("index.html", bookmarks=bookmarks, costs=COSTS, colors=COLORS, search=search)
 
 
 #####
