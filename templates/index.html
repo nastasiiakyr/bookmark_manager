@@ -10,15 +10,11 @@ main %}
 <table class="table table-hover align-middle">
   <thead>
     <tr>
-      <th>Bookmark</th>
-
-      <th class="text-start">Tag</th>
-
-      <th class="text-start">Cost</th>
-
-      <th class="text-start">Description</th>
-
-      <th></th>
+      <th style="width: 20%">Bookmark</th>
+      <th style="width: 20%">Tag</th>
+      <th style="width: 12%">Cost</th>
+      <th style="width: 38%">Description</th>
+      <th style="width: 10%"></th>
     </tr>
   </thead>
 
@@ -47,14 +43,16 @@ main %}
       </td>
 
       <td class="text-start">
-        {% for tag in bookmark.tags %}
-        <div
-          class="bookmark-tag"
-          style="background-color: {{ colors[tag.color] }};"
-        >
-          {{ tag.name }}
+        <div class="bookmark-tags">
+          {% for tag in bookmark.tags %}
+          <span
+            class="bookmark-tag"
+            style="background-color: {{ colors[tag.color] }};"
+          >
+            {{ tag.name }}
+          </span>
+          {% endfor %}
         </div>
-        {% endfor %}
       </td>
 
       <td class="text-start">

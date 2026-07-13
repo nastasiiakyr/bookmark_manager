@@ -79,8 +79,19 @@ footer p {
 }
 
 /* Bookmarks */
+
+.bookmark-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
 .bookmark-tag {
-  padding: 4px 8px;
-  border-radius: 4px;
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
   color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
 }

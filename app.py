@@ -226,11 +226,6 @@ def create_bookmark():
             flash("Invalid URL format")
             return redirect("/create-bookmark")
         
-        # Validate favicon url format if provided
-        if favicon and not (favicon.startswith("http://") or favicon.startswith("https://")):
-            flash("Invalid favicon URL format")
-            return redirect("/create-bookmark")
-        
         # Validate tags selection
         for tag in tags:
             if not any(t["id"] == int(tag) for t in user_tags):
@@ -284,11 +279,6 @@ def edit_bookmark():
         # Validate url format
         if not url.startswith("http://") and not url.startswith("https://"):
             flash("Invalid URL format")
-            return redirect(f"/edit-bookmark?id={bookmark_id}")
-        
-        # Validate favicon url format if provided
-        if favicon and not (favicon.startswith("http://") or favicon.startswith("https://")):
-            flash("Invalid favicon URL format")
             return redirect(f"/edit-bookmark?id={bookmark_id}")
         
         # Validate tags selection
