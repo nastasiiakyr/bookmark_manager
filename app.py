@@ -457,7 +457,11 @@ def delete_tag():
     if not tag_id:
         flash("Something went wrong")
         return redirect("/tags")
+    
+    # Remove existing tags for the bookmark
+    db.execute("DELETE FROM bookmark_tags WHERE tag_id = ?", tag_id)
 
+    # Delete the tag from the database
     db.execute("DELETE FROM tags WHERE id = ? AND user_id = ?", tag_id, session["user_id"])
 
     return redirect("/tags")
