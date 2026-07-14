@@ -8,6 +8,8 @@ main %}
 </div>
 
 <form class="row mb-3" method="get">
+  <!-- Search + Filters button -->
+
   <div class="d-flex gap-2">
     <input
       class="form-control"
@@ -17,11 +19,89 @@ main %}
       value="{{ search }}"
     />
 
-    {% if search %}
+    <button
+      class="btn btn-outline-secondary"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#filters"
+      aria-expanded="false"
+      aria-controls="filters"
+    >
+      Filters
+    </button>
+
+    {% if search or selected_tags or selected_costs %}
     <a href="/" class="btn btn-outline-secondary">Reset</a>
     {% endif %}
   </div>
+
+  <!-- Filters panel -->
+  <div class="collapse mt-3" id="filters">
+    <div class="card card-body">
+      <!-- Tags -->
+      <h6 class="mb-2">Tags</h6>
+
+      {% for tag in tags %}
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          name="tags"
+          value="{{ tag.id }}"
+          id="tag{{ tag.id }}"
+          {%
+          if
+          tag.id|string
+          in
+          selected_tags
+          %}checked{%
+          endif
+          %}
+        />
+
+        <label class="form-check-label" for="tag{{ tag.id }}">
+          {{ tag.name }}
+        </label>
+      </div>
+      {% endfor %}
+
+      <hr />
+
+      <!-- Cost -->
+      <h6 class="mb-2">Cost</h6>
+
+      {% for key, value in costs.items() %}
+      <div class="form-check">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          name="cost"
+          value="{{ key }}"
+          id="cost{{ key }}"
+          {%
+          if
+          key
+          in
+          selected_costs
+          %}checked{%
+          endif
+          %}
+        />
+
+        <label class="form-check-label" for="cost{{ key }}">
+          {{ value }}
+        </label>
+      </div>
+      {% endfor %}
+
+      <div class="d-flex mt-3">
+        <button type="submit" class="btn btn-primary">Apply</button>
+      </div>
+    </div>
+  </div>
 </form>
+
+<!-- Bookmarks table -->
 
 <table class="table table-hover align-middle">
   <thead>

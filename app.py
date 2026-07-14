@@ -48,16 +48,36 @@ def after_request(response):
 def home():
     """Show all bookmarks for the logged-in user"""
 
+    # Get user's tags from the database
+    tags = db.execute("SELECT id, name FROM tags WHERE user_id = ? ORDER BY name", session["user_id"])
+
     # Get search query
     search = request.args.get("search", "").strip()
 
-    # Get bookmarks from the database
+    # Get filter parameters
+    selected_tags = request.args.getlist("tags")
+    selected_costs = request.args.getlist("cost")
+
+    # Get bookmarks from the database using search and filter parameters if provided
+
     if search:
         query = "%" + search + "%"
-
-        bookmarks = db.execute("SELECT DISTINCT b.id, b.name, b.url, b.favicon, b.cost, b.description FROM bookmarks AS b LEFT JOIN bookmark_tags AS bt ON b.id = bt.bookmark_id LEFT JOIN tags AS t ON bt.tag_id = t.id WHERE b.user_id = ? AND (b.name LIKE ? OR b.url LIKE ? OR b.description LIKE ? OR b.cost LIKE ? OR t.name LIKE ?) ORDER BY b.name", session["user_id"], query, query, query, query, query)
     else:
-        bookmarks = db.execute("SELECT id, name, url, favicon, cost, description FROM bookmarks WHERE user_id = ? ORDER BY name", session["user_id"])
+        query = "%"
+    
+    if selected_tags:
+        tag_placeholders = ",".join("?" for _ in selected_tags)
+        tag_filter = f"AND t.id IN ({tag_placeholders})"
+    else:
+        tag_filter = ""
+    
+    if selected_costs:  
+        cost_placeholders = ",".join("?" for _ in selected_costs)
+        cost_filter = f"AND b.cost IN ({cost_placeholders})"
+    else:
+        cost_filter = ""
+
+    bookmarks = db.execute(f"SELECT DISTINCT b.id, b.name, b.url, b.favicon, b.cost, b.description FROM bookmarks AS b LEFT JOIN bookmark_tags AS bt ON b.id = bt.bookmark_id LEFT JOIN tags AS t ON bt.tag_id = t.id WHERE b.user_id = ? AND (b.name LIKE ? OR b.url LIKE ? OR b.description LIKE ? OR b.cost LIKE ? OR t.name LIKE ?) {tag_filter} {cost_filter} ORDER BY b.name", session["user_id"], query, query, query, query, query, *selected_tags, *selected_costs)
 
     # Get tags associated with bookmarks
     bookmark_tags = db.execute("SELECT bt.bookmark_id, t.id, t.name, t.color FROM bookmark_tags AS bt JOIN tags AS t ON bt.tag_id = t.id WHERE t.user_id = ?", session["user_id"])
@@ -71,7 +91,7 @@ def home():
             if bookmark["id"] == tag["bookmark_id"]:
                 bookmark["tags"].append(tag)
     
-    return render_template("index.html", bookmarks=bookmarks, costs=COSTS, colors=COLORS, search=search)
+    return render_template("index.html", bookmarks=bookmarks, costs=COSTS, colors=COLORS, search=search, tags=tags, selected_tags=selected_tags, selected_costs=selected_costs)
 
 
 #####
