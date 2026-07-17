@@ -17,6 +17,14 @@
       crossorigin="anonymous"
     ></script>
 
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Favicon -->
     <link
       rel="icon"
@@ -78,7 +86,7 @@
 
     {% if get_flashed_messages() %}
     <header>
-      <div class="alert alert-primary mb-0" role="alert">
+      <div class="alert alert-primary mb-0 text-center" role="alert">
         {{ get_flashed_messages() | join(" ") }}
       </div>
     </header>

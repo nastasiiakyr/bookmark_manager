@@ -18,6 +18,7 @@ block main %}
       value="{{ bookmark.name }}"
       type="text"
       maxlength="50"
+      required
     />
   </div>
 
@@ -26,15 +27,22 @@ block main %}
       autocomplete="off"
       class="input form-control mx-auto"
       name="url"
-      placeholder="New Bookmark URl"
+      placeholder="New Bookmark URL"
       value="{{ bookmark.url }}"
-      type="text"
+      type="url"
+      required
     />
   </div>
 
   <div class="mb-2 col-3">
     <label class="form-label">Select Tags</label>
 
+    {% if not tags %}
+    <label class="form-check-label text-left">
+      You don't have created tags. Create a new one in Tag settings
+    </label>
+    {% endif %} 
+    
     {% for tag in tags %}
     <div class="form-check">
       <input
@@ -71,8 +79,7 @@ block main %}
         value="{{ cost }}"
         {%
         if
-        cost=""
-        ="bookmark.cost"
+        cost==bookmark.cost
         %}
         selected
         {%
@@ -104,7 +111,7 @@ block main %}
       name="favicon"
       placeholder="Favicon URL (optional)"
       value="{{ bookmark.favicon }}"
-      type="text"
+      type="url"
     />
   </div>
 

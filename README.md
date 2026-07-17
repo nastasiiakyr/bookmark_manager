@@ -125,7 +125,7 @@ For the security reasons all passwords are hashed with Werkzeug. Also every SQL 
 6. Initialize the database
 
    ```
-   sqlite3 bookmarks.db < schema.sql
+   sqlite3 bookmark_manager.db < schema.sql
    ```
 
 7. Run the application

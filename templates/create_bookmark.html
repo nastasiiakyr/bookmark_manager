@@ -4,8 +4,7 @@ block main %}
 <h1 class="mb-4 text-center">Add bookmark</h1>
 
 <form action="/create-bookmark" method="post">
-
-   <!-- Inputs -->
+  <!-- Inputs -->
   <div class="mb-2 col-3">
     <input
       autocomplete="off"
@@ -15,6 +14,7 @@ block main %}
       placeholder="Bookmark Name"
       type="text"
       maxlength="50"
+      required
     />
   </div>
 
@@ -23,14 +23,21 @@ block main %}
       autocomplete="off"
       class="input form-control mx-auto"
       name="url"
-      placeholder="Bookmark URl"
-      type="text"
+      placeholder="Bookmark URL"
+      type="url"
+      required
     />
   </div>
 
   <div class="mb-2 col-3">
     <label class="form-label">Select Tags</label>
 
+    {% if not tags %}
+    <label class="form-check-label text-left">
+      You don't have created tags. Create a new one in Tag settings
+    </label>
+    {% endif %} 
+    
     {% for tag in tags %}
     <div class="form-check">
       <input
@@ -76,7 +83,7 @@ block main %}
       class="input form-control mx-auto"
       name="favicon"
       placeholder="Favicon URL (optional)"
-      type="text"
+      type="url"
     />
   </div>
 

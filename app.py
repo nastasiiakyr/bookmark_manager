@@ -465,7 +465,3 @@ def delete_tag():
     db.execute("DELETE FROM tags WHERE id = ? AND user_id = ?", tag_id, session["user_id"])
 
     return redirect("/tags")
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
