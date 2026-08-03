@@ -1,6 +1,6 @@
 # BOOKMARK MANAGER
 
-#### Video Demo: <URL HERE>
+#### Video Demo: [YouTube](https://youtu.be/LZ_ezDXLkBQ)
 
 ## Description
 
@@ -15,7 +15,7 @@ This is my final project for CS50, and it's a Flask web app backed by SQLite. It
 1. User registration and login/logout, with hashed passwords.
 2. Password change page for logged-in users.
 3. Tag management - create, edit, delete, and view tags, each with its own color so they're easier to tell apart visually.
-4. Bookmark management — add, edit, delete, and view saved websites, each of which can have a cost label (free, freemium, premium) and multiple tags attached.
+4. Bookmark management - add, edit, delete, and view saved websites, each of which can have a cost label (free, freemium, premium) and multiple tags attached.
 5. Global search across name, URL, description, cost, and tag names at the same time.
 6. Filtering by one or more tags and one or more cost types, combinable with the search.
 
@@ -73,7 +73,7 @@ All the Jinja templates.
 
 ### static/
 
-Contains static resources. Just `styles.css` — custom application styles that Bootstrap doesn't cover.
+Contains static resources. Just `styles.css` - custom application styles that Bootstrap doesn't cover.
 
 ## Design Decisions
 
